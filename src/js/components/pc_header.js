@@ -10,7 +10,7 @@ import {
 	Button,
 	CheckBox,
 	Modal
-} from 'antd';
+} from 'antd';  //做注册功能需要的antd 的API
 const FormItem = Form.Item;
 const SubMenu = Menu.SubMenu;
 const TabPane = Tabs.TabPane;
@@ -25,24 +25,27 @@ class PCHeader extends React.Component {
 		super();  //基类初始化
 		this.state = {
 			current: 'top',  //初始化current指定key为top
-			modalVisible: false,
-			action: 'login',
-			hasLogined: false,
-			userNickName: '',
+			modalVisible: false,  //弹出框默认为不弹出
+			action: 'login',  //初始化是login
+			hasLogined: false,  //初始化未登录
+			userNickName: '',  //初始化用户名为空
 			userid: 0
 		};
 	};
 
+
+	// 生命周期，组件将要加载的时候，干什么？  保存登陆状态  控制刷新的状态。
 	componentWillMount(){
 		if (localStorage.userid!='') {
 			this.setState({hasLogined:true});
 			this.setState({userNickName:localStorage.userNickName,userid:localStorage.userid});
 		}
 	};
-
+	
+	// 控制登陆弹出框显示
 	setModalVisible(value)
 	{
-		this.setState({modalVisible: value});
+		this.setState({modalVisible: value});   //用到了react的setstate，注意体会
 	};
 	handleClick(e) {
 		if (e.key == "register") {
@@ -93,7 +96,8 @@ class PCHeader extends React.Component {
 		this.setState({hasLogined:false});
 	};
 	render() {
-		let {getFieldProps} = this.props.form;
+		let {getFieldDecorator} = this.props.form;  //获取表单参数
+		// 判断是否登陆了，  然后把这个userShow放到我们的导航里就可以了。
 		const userShow = this.state.hasLogined
 			? <Menu.Item key="logout" class="register">
 					<Button type="primary" htmlType="button">{this.state.userNickName}</Button>
@@ -147,15 +151,16 @@ class PCHeader extends React.Component {
 							</Menu.Item>
 							{userShow}
 						</Menu>
+						{/* wrapClassName控制这个Modal处的位置 */}
 						<Modal title="用户中心" wrapClassName="vertical-center-modal" visible={this.state.modalVisible} onCancel= {()=>this.setModalVisible(false)} onOk={() => this.setModalVisible(false)} okText="关闭">
 							<Tabs type="card" onChange={this.callback.bind(this)}>
 								<TabPane tab="登录" key="1">
 									<Form horizontal onSubmit={this.handleSubmit.bind(this)}>
 										<FormItem label="账户">
-											<Input placeholder="请输入您的账号" {...getFieldProps('userName')}/>
+											<Input placeholder="请输入您的账号" {...getFieldDecorator('userName')}/>
 										</FormItem>
 										<FormItem label="密码">
-											<Input type="password" placeholder="请输入您的密码" {...getFieldProps('password')}/>
+											<Input type="password" placeholder="请输入您的密码" {...getFieldDecorator('password')}/>
 										</FormItem>
 										<Button type="primary" htmlType="submit">登录</Button>
 									</Form>
@@ -163,14 +168,15 @@ class PCHeader extends React.Component {
 								<TabPane tab="注册" key="2">
 									<Form horizontal onSubmit={this.handleSubmit.bind(this)}>
 										<FormItem label="账户">
-											<Input placeholder="请输入您的账号" {...getFieldProps('r_userName')}/>
+											<Input placeholder="请输入您的账号" {...getFieldDecorator('r_userName')}/>
 										</FormItem>
 										<FormItem label="密码">
-											<Input type="password" placeholder="请输入您的密码" {...getFieldProps('r_password')}/>
+											<Input type="password" placeholder="请输入您的密码" {...getFieldDecorator('r_password')}/>
 										</FormItem>
 										<FormItem label="确认密码">
-											<Input type="password" placeholder="请再次输入您的密码" {...getFieldProps('r_confirmPassword')}/>
+											<Input type="password" placeholder="请再次输入您的密码" {...getFieldDecorator('r_confirmPassword')}/>
 										</FormItem>
+										{/* 提交这个表单 */}
 										<Button type="primary" htmlType="submit">注册</Button>
 									</Form>
 								</TabPane>
@@ -183,4 +189,6 @@ class PCHeader extends React.Component {
 		);
 	};
 }
+
+//做一个二次封装   
 export default PCHeader = Form.create({})(PCHeader);

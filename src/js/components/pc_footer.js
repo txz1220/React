@@ -6,9 +6,10 @@ export default class PCFooter extends React.Component {
 		return (
 			<footer>
 				<Row>
+					{/* 前后各空两个栅格 */}
 					<Col span={2}></Col>
 					<Col span={20} class="footer">
-            &copy;&nbsp;2016 ReactNews. All Rights Reserved.
+            &copy;&nbsp;2018 ReactNews. All Rights Reserved.
 					</Col>
 					<Col span={2}></Col>
 				</Row>
@@ -16,3 +17,4 @@ export default class PCFooter extends React.Component {
 		);
 	};
 }
+
